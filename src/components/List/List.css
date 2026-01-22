@@ -1,0 +1,144 @@
+.list-item {
+  position: relative;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.4rem;
+  background: #fff;
+  cursor: pointer;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+.list-item:focus {
+  outline: 2px solid #93c5fd;
+  outline-offset: 2px;
+}
+
+.list-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 0.5rem;
+  transform: translateX(0%);
+  opacity: 1;
+  transition: transform 600ms ease, opacity 600ms ease;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.list-item.crossed::before {
+  transform: translateX(110%);
+  opacity: 0;
+}
+
+
+.list-item::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  top: 50%;
+  height: 3.5px;
+  overflow: hidden;
+
+  background: repeating-linear-gradient(
+    -3deg,
+    #1f1f1f91,
+    #1f1f1f 2px,
+    #2b2b2b 3px
+  );
+
+  border-radius: 2px;
+  filter: blur(0.15px);
+
+  transform: scaleX(0) rotate(-2.5deg);
+  transform-origin: left center;
+  pointer-events: none;
+  z-index: 3;
+
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+}
+
+@keyframes pen-stroke {
+  0% {
+    transform: scaleX(0) rotate(-2.5deg);
+    opacity: 0.85;
+  }
+  65% {
+    transform: scaleX(1.08) rotate(-2deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1) rotate(-2.5deg);
+    opacity: 0.95;
+  }
+}
+
+@keyframes pen-jitter {
+  0%   { top: 50%; }
+  50%  { top: 52%; }
+  100% { top: 50%; }
+}
+
+.list-item.crossed::after {
+  animation:
+    pen-stroke 0.42s ease-out forwards,
+    pen-jitter 0.15s ease-in-out;
+}
+
+.list-item span {
+  position: relative;
+  z-index: 2;
+}
+
+.list-item.crossed {
+  color: #9ca3af;
+}
+
+.categories {
+  display: grid;
+  gap: 1rem;
+}
+
+.category-title {
+  margin: 1rem 0 0.5rem;
+  font-size: 1rem;
+  color: #374151;
+}
+
+.list-actions {
+  display: flex;
+  justify-content: center;
+  margin: 0.75rem 0 1rem;
+}
+
+.list-delete {
+  display: flex;
+  align-self: center;
+  color: #ef4444;
+  cursor: pointer;
+}
+
+.card {
+  position: relative;
+}
+
+.list-back {
+  position: absolute;
+  top: 5rem;
+  left: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #307fbc9b;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
