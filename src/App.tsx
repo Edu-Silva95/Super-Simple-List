@@ -39,13 +39,16 @@ function App() {
     }
   };
 
-  const handleAddItem = async (item: Omit<Item, "_id">) => {
+  const handleAddItem = async (item: Omit<Item, "_id">): Promise<boolean> => {
     try {
       const newItem = await itemsAPI.addItem(item);
       setItems((prev) => [...prev, newItem]);
+      setError(null);
+      return true;
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to add item");
       console.error(err);
+      return false;
     }
   };
 

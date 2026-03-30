@@ -5,7 +5,7 @@ import type { Item } from "../../App";
 
 interface ListFormProps {
   items: Item[];
-  onAddItem: (item: Omit<Item, "_id">) => void;
+  onAddItem: (item: Omit<Item, "_id">) => Promise<boolean> | boolean;
   onRemoveItem: (id: string) => void;
 }
 
@@ -15,16 +15,15 @@ export default function ListForm({ items, onAddItem, onRemoveItem }: ListFormPro
   const [quantity, setQuantity] = useState<number | "">("");
   const [category, setCategory] = useState("");
   const [showPreview, setShowPreview] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   const [shake, setShake] = useState(false);
 
-  const listNav = useNavigate();
-
   function handleClick() {
-    listNav("/list");
+    navigate("/list");
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const invalid = !name.trim() || !category.trim() || !quantity || Number(quantity) <= 0;
     if (invalid) {
@@ -32,7 +31,15 @@ export default function ListForm({ items, onAddItem, onRemoveItem }: ListFormPro
       setTimeout(() => setShake(false), 400);
       return;
     }
-    onAddItem({ name: name.trim(), quantity: Number(quantity), category: category.trim() });
+    const ok = await onAddItem({
+      name: name.trim(),
+      quantity: Number(quantity),
+      category: category.trim(),
+    });
+    if (ok) {
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 2000);
+    }
     setName("");
     setQuantity("");
     setCategory("");
@@ -71,13 +78,13 @@ export default function ListForm({ items, onAddItem, onRemoveItem }: ListFormPro
             className="input"
             required
           />
-          <button type="submit">Add</button>
+          <button type="submit" className="add-btn">Add</button>
         </form>
         <div className="form-actions">
           <button type="button" className="preview-btn" onClick={() => setShowPreview(true)}>
             Preview List
           </button>
-          <button type="button" onClick={handleClick}>Show List</button>
+          <button type="button" onClick={handleClick} className="show-list-btn">Show List</button>
         </div>
         {showPreview && (
           <div className="modal-overlay" onClick={() => setShowPreview(false)}>
@@ -120,6 +127,8 @@ export default function ListForm({ items, onAddItem, onRemoveItem }: ListFormPro
           </div>
         )}
       </div>
+
+      {showToast && <div className="toast">Added to the List!</div>}
     </>
   );
 }
