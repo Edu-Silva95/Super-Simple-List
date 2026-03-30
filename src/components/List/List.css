@@ -92,7 +92,47 @@
     pen-jitter 0.15s ease-in-out;
 }
 
-.list-item span {
+.list-item .item-text {
+  position: relative;
+  z-index: 2;
+}
+
+.item-row {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: space-between;
+}
+
+.item-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-left: auto;
+}
+
+.item-control {
+  appearance: none;
+  border: none;
+  background: transparent;
+  padding: 0.15rem 0.25rem;
+  border-radius: 0.35rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.item-control:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.item-control-remove {
+  color: #ef4444;
+}
+
+.item-text {
   position: relative;
   z-index: 2;
 }

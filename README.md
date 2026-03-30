@@ -1,73 +1,83 @@
-# React + TypeScript + Vite
+# Super Simple List
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple full-stack CRUD application for managing items, built with React (TypeScript) and an Express API backed by MongoDB.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- View all items
+- Add an item (name, quantity, category)
+- Update an item (e.g. quantity)
+- Remove an item
+- Clear all items
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Frontend: React + TypeScript + Vite
+- Backend: Node.js + Express
+- Database: MongoDB + Mongoose
+- Deployment: Vercel (frontend)
 
-## Expanding the ESLint configuration
+## Project Structure
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+/src                # React app
+/server             # Express + Mongoose API
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Prerequisites
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- Node.js + npm
+- MongoDB running locally, or a MongoDB connection string
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Setup
+
+Install dependencies (root + server):
+
+```bash
+npm install
+npm --prefix server install
+```
+
+## Run (Development)
+
+Start both frontend and backend from the repo root:
+
+```bash
+npm run dev
+```
+
+Defaults:
+
+- Frontend (Vite): http://localhost:5173 (may pick another port if busy)
+- Backend API: http://localhost:5000
+
+## API
+
+Base URL: `http://localhost:5000/api`
+
+- `GET /health` — server status (includes DB connection info)
+- `GET /items` — list items
+- `POST /items` — add item
+- `DELETE /items/:id` — delete one
+- `DELETE /items` — delete all
+
+### “Failed to fetch items”
+
+This usually means one of these:
+
+- The backend server isn't running on port `5000`
+- MongoDB isn't reachable (the API may respond with `503 Database not connected`)
+- MongoDB turned the cluster off due to inactivity
+
+Quick checks:
+
+```bash
+curl http://localhost:5000/api/health
+curl http://localhost:5000/api/items
+```
+
+## Build (Frontend)
+
+```bash
+npm run build
 ```

@@ -59,6 +59,17 @@ function App() {
     }
   };
 
+  const handleUpdateItemQuantity = async (id: string, quantity: number) => {
+    try {
+      const updatedItem = await itemsAPI.updateItemQuantity(id, quantity);
+      setItems((prev) => prev.map((item) => (item._id === id ? updatedItem : item)));
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to update item");
+      console.error(err);
+    }
+  };
+
   const handleClearAll = async () => {
     const confirmed = confirm("Are you sure you want to delete all items?");
     if (confirmed) {
@@ -98,7 +109,17 @@ function App() {
             />
           }
         />
-        <Route path="/list" element={<List items={items} onClearAll={handleClearAll} />} />
+        <Route
+          path="/list"
+          element={
+            <List
+              items={items}
+              onClearAll={handleClearAll}
+              onRemoveItem={handleRemoveItem}
+              onUpdateItemQuantity={handleUpdateItemQuantity}
+            />
+          }
+        />
       </Routes>
       <Footer />
     </BrowserRouter>

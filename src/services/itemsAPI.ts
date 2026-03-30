@@ -32,4 +32,14 @@ export const itemsAPI = {
     if (!response.ok) throw new Error("Failed to delete all items");
     return response.json();
   },
+
+  async updateItemQuantity(id: string, quantity: number) {
+    const response = await fetch(`${API_URL}/${id}` as string, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ quantity }),
+    });
+    if (!response.ok) throw new Error("Failed to update item");
+    return response.json();
+  },
 };

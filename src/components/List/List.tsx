@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 import "./List.css";
 import type { Item } from "../../App";
 
-export default function List({ items, onClearAll }: ListProps) {
+export default function List({ items, onClearAll, onRemoveItem, onUpdateItemQuantity }: ListProps) {
   const navigate = useNavigate();
   const [crossed, setCrossed] = useState<Record<string, boolean>>({});
+  const [editMode, setEditMode] = useState(false);
 
   function toggleItem(key: string) {
     setCrossed((prev) => ({
@@ -41,6 +42,16 @@ export default function List({ items, onClearAll }: ListProps) {
           >
             Delete All
           </button>
+
+          <button
+            className="list-update"
+            onClick={() => {
+              setEditMode((prev) => !prev);
+            }}
+          >
+            Update
+          </button>
+
         </div>
 
         {items.length === 0 ? (
@@ -63,9 +74,55 @@ export default function List({ items, onClearAll }: ListProps) {
                           toggleItem(key);
                         }}
                       >
-                        <span>
-                          {item.name} – {item.quantity}
-                        </span>
+                        <div className="item-row">
+                          <span className="item-text">
+                            {item.name} – {item.quantity}
+                          </span>
+
+                          {editMode && (
+                            <div className="item-controls" onClick={(e) => e.stopPropagation()}>
+                              <button
+                                type="button"
+                                className="item-control item-control-up"
+                                aria-label={`Increase quantity for ${item.name}`}
+                                onClick={async (e) => {
+                                  e.stopPropagation();
+                                  await onUpdateItemQuantity(item._id, item.quantity + 1);
+                                }}
+                              >
+                                ▲
+                              </button>
+                              <button
+                                type="button"
+                                className="item-control item-control-down"
+                                aria-label={`Decrease quantity for ${item.name}`}
+                                disabled={item.quantity <= 1}
+                                onClick={async (e) => {
+                                  e.stopPropagation();
+                                  await onUpdateItemQuantity(item._id, item.quantity - 1);
+                                }}
+                              >
+                                ▼
+                              </button>
+                              <button
+                                type="button"
+                                className="item-control item-control-remove"
+                                aria-label={`Remove ${item.name}`}
+                                onClick={async (e) => {
+                                  e.stopPropagation();
+                                  await onRemoveItem(item._id);
+                                  setCrossed((prev) => {
+                                    const next = { ...prev };
+                                    delete next[item._id];
+                                    return next;
+                                  });
+                                }}
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          )}
+                        </div>
                       </li>
                     );
                   })}
@@ -82,4 +139,6 @@ export default function List({ items, onClearAll }: ListProps) {
 interface ListProps {
   items: Item[];
   onClearAll?: () => void;
+  onRemoveItem: (id: string) => Promise<void> | void;
+  onUpdateItemQuantity: (id: string, quantity: number) => Promise<void> | void;
 }
