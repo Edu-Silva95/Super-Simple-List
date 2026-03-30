@@ -48,6 +48,7 @@ export default function List({ items, onClearAll, onRemoveItem, onUpdateItemQuan
             onClick={() => {
               setEditMode((prev) => !prev);
             }}
+            disabled={items.length === 0}
           >
             Update
           </button>
