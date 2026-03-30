@@ -4,6 +4,7 @@
   border-radius: 0.5rem;
   margin-bottom: 0.4rem;
   background: #fff;
+  color: #213547;
   cursor: pointer;
   transition: background-color 200ms ease, color 200ms ease;
 }
@@ -117,6 +118,7 @@
   appearance: none;
   border: none;
   background: transparent;
+  color: inherit;
   padding: 0.15rem 0.25rem;
   border-radius: 0.35rem;
   cursor: pointer;
